@@ -23,6 +23,12 @@ List of header files and preprocessing directives
 #define MAX_CLASS_SIZE 5
 #define MAX_NAME_SIZE 11
 #define DB_FILE_NAME "database"
+#define MIN_DAY 1
+#define MAX_DAY 31
+#define MIN_MONTH 1
+#define MAX_MONTH 12
+#define MIN_YEAR 1800
+#define MAX_YEAR 2016
 #define MIN_GPA 0.0
 #define MAX_GPA 4.0
 
@@ -47,8 +53,6 @@ typedef struct {
 
 
 
-
-
 /**********************************************************************
 Function prototypes
 **********************************************************************/
@@ -62,7 +66,6 @@ void showdate(date* showdates);
 
 
 
-
 /**********************************************************************
 Main
 **********************************************************************/
@@ -72,13 +75,15 @@ int main(void){
 	student studentlist[MAX_CLASS_SIZE+1];
 	strcpy(studentlist[0].name, "SENTINEL");
 		
-	while (1) {
+	while (1)
+	{
 		
 		printmenu();
 		printf("Enter your choice>");
 		scanf("%d", &choice);
 		
-		if (choice == 1) {
+		if (choice == 1)
+		{
 		
 			k = 0;
 			while (strcmp(studentlist[k].name, "SENTINEL")) k++;
@@ -91,21 +96,23 @@ int main(void){
 				else printf("Class is full\n");
 		}
 	
-		else if (choice == 2) {
+		else if (choice == 2)
+		{
 			
-				k = 0;
-				while (strcmp(studentlist[k].name, "SENTINEL")) k++;
-					if (k == 0) {
-						printf("Class is empty\n");
-					}
-					else {
-						strcpy(studentlist[k-1].name, "SENTINEL");
-					}
-			}
+			k = 0;
+			while (strcmp(studentlist[k].name, "SENTINEL")) k++;
+				if (k == 0) {
+					printf("Class is empty\n");
+				}
+				else {
+					strcpy(studentlist[k-1].name, "SENTINEL");
+				}
+		}
 		
-		else if (choice == 3) {
-				showstudent(studentlist);
-			}
+		else if (choice == 3)
+		{
+			showstudent(studentlist);
+		}
 				
 		/*else if (choice == 4) {
 				savestudent();
@@ -167,7 +174,7 @@ void getbirthday(date* dateinput) {
 	
 	printf("Enter birthday: day>");
 	scanf("%d", &dateinput->day);
-	while (dateinput->day <1 || dateinput->day >31)
+	while (dateinput->day < MIN_DAY || dateinput->day > MAX_DAY)
 	{
 		printf("Invalid day. Enter birthday: day>"); 
 		scanf("%d", &dateinput->day);
@@ -175,7 +182,7 @@ void getbirthday(date* dateinput) {
 	
 	printf("Enter birthday: month>");
 	scanf("%d", &dateinput->month);
-	while (dateinput->month <1 || dateinput->month >12)
+	while (dateinput->month < MIN_MONTH || dateinput->month > MAX_MONTH)
 	{
 		printf("Invalid month. Enter birthday: month>");
 		scanf("%d", &dateinput->month);
@@ -183,7 +190,7 @@ void getbirthday(date* dateinput) {
 	
 	printf("Enter birthday: year>");
 	scanf("%d", &dateinput->year);
-	while (dateinput->year <1800 || dateinput->year >2016)
+	while (dateinput->year < MIN_YEAR || dateinput->year > MAX_YEAR)
 	{
 		printf("Invalid year. Enter birthday: year>");
 		scanf("%d", &dateinput->year);
@@ -194,16 +201,21 @@ void getbirthday(date* dateinput) {
 
 /**********************************************************************
 Display student list
-
-printf("Class is empty\n");
 **********************************************************************/
 void showstudentlist(student studentlist[]) {
 	
 	int k = 0;
-	while (strcmp(studentlist[k].name, "SENTINEL"))
+	if (strcmp((studentlist[k]).name, "SENTINEL") == 0)
 	{
-		showstudent(&studentlist[k]);
-		k++;
+		printf("Class is empty\n");
+	}
+	else
+	{
+		while (strcmp(studentlist[k].name, "SENTINEL"))
+		{
+			showstudent(&studentlist[k]);
+			++k;
+		}
 	}
 }
 
@@ -211,19 +223,15 @@ void showstudentlist(student studentlist[]) {
 
 /**********************************************************************
 Display student
-
-printf("%-10.10s", showstudents->name);
-
 **********************************************************************/
 void showstudent(student* showstudents) {
 	printf("Name       Birthday   GPA\n");
 	printf("---------- ---------- ------\n");
 	
-	printf("%s", showstudents->name);
+	printf("%-10.10s", showstudents->name);
+	showdate(&showstudents->birthday);
 	
-	
-	/*showdate(&showstudents->birthday);
-	printf(" %lf", &showstudents->gpa);*/
+	/*printf(" %lf", &showstudents->gpa);*/
 	
 	printf("\n");
 }
