@@ -2,7 +2,7 @@
 48430 Embedded C - Assignment 2
 Name: Yasin Azimi
 Student ID: 11733490
-Date of submission: 09/05/2016
+Date of submission: 13/05/2016
 A brief statement on what you could achieve (less than 50 words):
 = 
 
@@ -16,21 +16,10 @@ List of header files and preprocessing directives
 **********************************************************************/
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <limits.h>
-
 
 #define MAX_CLASS_SIZE 5
 #define MAX_NAME_SIZE 11
 #define DB_FILE_NAME "database"
-#define MIN_DAY 1
-#define MAX_DAY 31
-#define MIN_MONTH 1
-#define MAX_MONTH 12
-#define MIN_YEAR 1800
-#define MAX_YEAR 2016
-#define MIN_GPA 0.0
-#define MAX_GPA 4.0
 
 
 
@@ -38,18 +27,19 @@ List of header files and preprocessing directives
 
 **********************************************************************/
 
-typedef struct {
+struct date {
 	int day;
 	int month;
 	int year;
-} date;
+};
 
-
-typedef struct {
+struct student {
 	char name[MAX_NAME_SIZE];
-	double gpa;
-	date birthday;
-} student;
+	float gpa;
+	struct date birthday;
+};
+
+typedef struct student studentcount;
 
 
 
@@ -57,12 +47,27 @@ typedef struct {
 Function prototypes
 **********************************************************************/
 void printmenu(void);
-void addstudent(student* studentinput);
-void getbirthday(date* dateinput);
 
-void showstudentlist(student studentlist[]);
-void showstudent(student* showstudents);
-void showdate(date* showdates);
+void addstudent(studentcount count[], int* studentsize);
+void showstudentlist(studentcount count[], int* studentsize);
+void savestudentlist(studentcount count[], int* studentsize);
+void readstudentlist(studentcount count[], int* studentsize);
+
+void flush_stdin(void);
+
+
+
+/**********************************************************************
+Validating integer values
+**********************************************************************/
+char checkRange(char max, char min, char num) {
+    if (num <= max && num >= min) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
 
 
 
@@ -70,62 +75,60 @@ void showdate(date* showdates);
 Main
 **********************************************************************/
 int main(void){
-	int choice;
-	int k;
-	student studentlist[MAX_CLASS_SIZE+1];
-	strcpy(studentlist[0].name, "SENTINEL");
-		
-	while (1)
-	{
-		
+	studentcount studentlist[MAX_CLASS_SIZE-1];
+	char SENTINEL = NULL;
+	int studentsize = 0;
+	char option;
+	
+	while (option != '6') {
 		printmenu();
 		printf("Enter your choice>");
-		scanf("%d", &choice);
-		
-		if (choice == 1)
+		scanf(" %c", &option);
+		switch (option)
 		{
-		
-			k = 0;
-			while (strcmp(studentlist[k].name, "SENTINEL")) k++;
-			
-				if (k < MAX_CLASS_SIZE)
-				{
-					addstudent(&studentlist[k]);
-					strcpy(studentlist[k+1].name, "SENTINEL");
-				}
-				else printf("Class is full\n");
+			case '1':
+					if (SENTINEL == 0) {
+						if (studentsize >= 0 || studentsize <= 4) {
+							addstudent(studentlist, &studentsize);
+						}
+					}
+					else if (SENTINEL != 1) {
+						if (studentsize > 4) {
+							printf("Class is full\n");
+						}
+					}
+					break;
+					
+			case '2':
+					if (studentsize > 0) {
+						studentsize--;
+					}
+					else if (studentsize <= 0) {
+						printf("Class is empty\n");
+					}
+					break;
+					
+			case '3':
+					showstudentlist(studentlist, &studentsize);
+					break;
+
+			case '4':
+					savestudentlist(studentlist, &studentsize);
+					break;
+					
+			case '5':
+					readstudentlist(studentlist, &studentsize);
+					break;
+					
+			case '6':
+					exit(EXIT_SUCCESS);
+					
+			default:
+					printf("Invalid choice\n");
+					break;
 		}
-	
-		else if (choice == 2)
-		{
-			
-			k = 0;
-			while (strcmp(studentlist[k].name, "SENTINEL")) k++;
-				if (k == 0) {
-					printf("Class is empty\n");
-				}
-				else {
-					strcpy(studentlist[k-1].name, "SENTINEL");
-				}
-		}
-		
-		else if (choice == 3)
-		{
-			showstudent(studentlist);
-		}
-				
-		/*else if (choice == 4) {
-				savestudent();
-			}
-				
-		else if (choice == 5) {
-				readstudent();
-			}*/
-	
-	
-		/*printmenu();*/
-	
-	}
+    }
+    return 1;
 }
 
 
@@ -146,127 +149,117 @@ void printmenu(void){
 
 
 /**********************************************************************
-Add student
+Validating integer values
 **********************************************************************/
-void addstudent(student* studentinput) {
-	
-    printf("Enter name>");
-	scanf("%s", studentinput->name);
-	
-	getbirthday(&studentinput->birthday);
-	
-	printf("Enter GPA>");
-	scanf("%lf", &studentinput->gpa);
-	while (studentinput->gpa <MIN_GPA || studentinput->gpa >MAX_GPA)
-	{
-		printf("Invalid GPA. Enter GPA>");
-		scanf("%lf", &studentinput->gpa);
-	}
+void flush_stdin(void) {
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
 }
 
 
-
 /**********************************************************************
-Get birthday dates 
+Add new student
 **********************************************************************/
-
-void getbirthday(date* dateinput) {
+void addstudent(studentcount count[], int* studentsize) {
+	studentcount addnewstudent;
+	printf("Enter name>");
+	if (scanf(" %10[^\n]", addnewstudent.name) != 1) {
+		flush_stdin();
+	}
 	
 	printf("Enter birthday: day>");
-	scanf("%d", &dateinput->day);
-	while (dateinput->day < MIN_DAY || dateinput->day > MAX_DAY)
-	{
-		printf("Invalid day. Enter birthday: day>"); 
-		scanf("%d", &dateinput->day);
+	scanf("%d", &addnewstudent.birthday.day);
+	while (addnewstudent.birthday.day < 1 || addnewstudent.birthday.day > 31) {
+		printf("Invalid day. Enter birthday: day>");	
+		if (scanf("%d", &addnewstudent.birthday.day) != 1) {
+			flush_stdin();
+		}
 	}
 	
 	printf("Enter birthday: month>");
-	scanf("%d", &dateinput->month);
-	while (dateinput->month < MIN_MONTH || dateinput->month > MAX_MONTH)
-	{
+	scanf("%d", &addnewstudent.birthday.month);
+	while (addnewstudent.birthday.month < 1 || addnewstudent.birthday.month > 12) {
 		printf("Invalid month. Enter birthday: month>");
-		scanf("%d", &dateinput->month);
+		if (scanf("%d", &addnewstudent.birthday.month) != 1) {
+			flush_stdin();
+		}
 	}
 	
 	printf("Enter birthday: year>");
-	scanf("%d", &dateinput->year);
-	while (dateinput->year < MIN_YEAR || dateinput->year > MAX_YEAR)
-	{
+	scanf("%d", &addnewstudent.birthday.year);
+	while (addnewstudent.birthday.year < 1800 || addnewstudent.birthday.year > 2016) {
 		printf("Invalid year. Enter birthday: year>");
-		scanf("%d", &dateinput->year);
-	}
-}
-
-
-
-/**********************************************************************
-Display student list
-**********************************************************************/
-void showstudentlist(student studentlist[]) {
-	
-	int k = 0;
-	if (strcmp((studentlist[k]).name, "SENTINEL") == 0)
-	{
-		printf("Class is empty\n");
-	}
-	else
-	{
-		while (strcmp(studentlist[k].name, "SENTINEL"))
-		{
-			showstudent(&studentlist[k]);
-			++k;
+		if (scanf("%d", &addnewstudent.birthday.year) != 1) {
+			flush_stdin();
 		}
 	}
+	
+	printf("Enter GPA>");
+	scanf("%f", &addnewstudent.gpa);
+	while (addnewstudent.gpa < 0.0 || addnewstudent.gpa > 4.0) {
+		printf("Invalid GPA. Enter GPA>");
+		if (scanf("%f", &addnewstudent.gpa) != 1) {
+			flush_stdin();
+		}
+	}
+	
+	count[*studentsize] = addnewstudent;
+	*studentsize += 1;
 }
 
 
 
 /**********************************************************************
-Display student
+Display the students in a list
 **********************************************************************/
-void showstudent(student* showstudents) {
-	printf("Name       Birthday   GPA\n");
-	printf("---------- ---------- ------\n");
-	
-	printf("%-10.10s", showstudents->name);
-	showdate(&showstudents->birthday);
-	
-	/*printf(" %lf", &showstudents->gpa);*/
-	
-	printf("\n");
+void showstudentlist(studentcount count[], int* studentsize) {
+    printf("Name       Birthday   GPA\n");
+    printf("---------- ---------- ------\n");
+    int element;
+    for (element = 0; element < *studentsize; element++) {
+		printf("%-11.10s", count[element].name);
+		printf("%02d-%02d-%-5.4d", count[element].birthday.day, count[element].birthday.month, count[element].birthday.year);
+		printf("%.4f\n", count[element].gpa);
+    }
 }
 
 
 
 /**********************************************************************
-Display birthday
+Save studentlist to database
 **********************************************************************/
-void showdate(date* showdates) {
-	printf(" %02d-%02d-%02d", showdates->day, showdates->month, showdates->year);
+void savestudentlist(studentcount count[], int* studentsize) {
+	int record;
+	int col = 0;
+	FILE *writefile;
+	writefile = fopen("database", "w");
+	for (record = 0; record < *studentsize; record++) {
+		fprintf(writefile, "%s\t", count[col].name);
+		fprintf(writefile, "%d\t%d\t%d\t", count[col].birthday.day, count[col].birthday.month, count[col].birthday.year);
+		fprintf(writefile, "%.6f\n", count[col].gpa);
+	}
+	fclose(writefile);
 }
 
 
 
 /**********************************************************************
-Display gpa
+Read studentlist from database
 **********************************************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void readstudentlist(studentcount count[], int* studentsize) {
+	int r;
+	FILE *readfile;
+	
+	readfile = fopen("database", "r");
+	if (readfile == NULL) {
+		printf("Read error\n");
+	}
+	else if (readfile) {
+		while ((r = getc(readfile)) != EOF)
+			putchar(r);
+		fclose(readfile);
+	}	
+}
 
 
 
