@@ -79,7 +79,7 @@ int main(void) {
 	
 	do {
 		printmenu();	/*Calling the function printmenu*/
-		printf("Enter your choice>");	/*Prints out requesting the user to select an option from the printmenu*/
+		printf("Enter your choice>");	/*Prompts user to select an option from the printmenu*/
 		scanf("%c", &option);	/*Receives an input value from the user and stores that value in the 'option' character*/
 		switch (option)		/*Switch statement tests a character input against the following list of values*/
 		{
@@ -155,12 +155,12 @@ Add student
 void addstudent(studentcount count[], int* studentsize) {
 	studentcount addnewstudent;		/*Declaring another instance of variable 'addnewstudent' to the struct type 'student'*/
 	
-	printf("Enter name>");	/*Prints out requesting the user to enter name*/
-	if (scanf(" %10[^\n]", addnewstudent.name) != EOF) {	/*Checks for the receiving input and only receives the first 10 characters. It then puts these characters in the variable 'addnewstudent' which is stored as an array of struct type 'student'*/
+	printf("Enter name>");	/*Prompts user to enter name*/
+	if (scanf(" %10[^\n]", addnewstudent.name) != EOF) {	/*Checks for the receiving input and only receives the first 10 characters. The scanf reads the strings and the format string " %10[^\n]" tells the function to read every character that is not '\n' and therefore, that leaves the '\n' character in the input buffer. It then puts these characters in the variable 'addnewstudent' which is stored as an array of struct type 'student'*/
 		flush_stdin();	/*Clear the buffer*/
 	}
 
-	printf("Enter birthday: day>");		/*Prints out requesting the user to enter birthday: day*/
+	printf("Enter birthday: day>");		/*Prompts user to enter birthday: day*/
 	scanf("%d", &addnewstudent.birthday.day);
 	while (addnewstudent.birthday.day < 1 || addnewstudent.birthday.day > 31) {
 		printf("Invalid day. Enter birthday: day>");	
@@ -169,7 +169,7 @@ void addstudent(studentcount count[], int* studentsize) {
 		}
 	}
 	
-	printf("Enter birthday: month>");	/*Prints out requesting the user to enter birthday: month*/
+	printf("Enter birthday: month>");	/*Prompts user to enter birthday: month*/
 	scanf("%d", &addnewstudent.birthday.month);
 	while (addnewstudent.birthday.month < 1 || addnewstudent.birthday.month > 12) {
 		printf("Invalid month. Enter birthday: month>");
@@ -178,7 +178,7 @@ void addstudent(studentcount count[], int* studentsize) {
 		}
 	}
 	
-	printf("Enter birthday: year>");	/*Prints out requesting the user to enter birthday: year*/
+	printf("Enter birthday: year>");	/*Prompts user to enter birthday: year*/
 	scanf("%d", &addnewstudent.birthday.year);
 	while (addnewstudent.birthday.year < 1800 || addnewstudent.birthday.year > 2016) {
 		printf("Invalid year. Enter birthday: year>");
@@ -187,7 +187,7 @@ void addstudent(studentcount count[], int* studentsize) {
 		}
 	}
 	
-	printf("Enter GPA>");	/*Prints out requesting the user to enter gpa*/
+	printf("Enter GPA>");	/*Prompts user to enter gpa*/
 	scanf("%f", &addnewstudent.gpa);	
 	while (addnewstudent.gpa < 0.0 || addnewstudent.gpa > 4.0) {
 		printf("Invalid GPA. Enter GPA>");
@@ -220,10 +220,10 @@ void showstudentlist(studentcount count[], int* studentsize) {
 	int element;	/*The keyword int declares 'element' to be an integer*/
 	printf("Name       Birthday   GPA\n");	/*Prints out to the terminal to show the headings for student details*/
 	printf("---------- ---------- ------\n");	/*Prints out to the terminal to indicate formatted spaces between the headings*/
-	for (element = 0; element < *studentsize; element++) {		/*Assigns an integer value of 0 to the variable 'element' with a condition to check whether the 'element' is less than the value stored inside the 'studentsize'. This will then proceed to print out to the terminal the following commands and hence, continues the iterations 'element++'*/
+	for (element = 0; element < *studentsize; element++) {		/*Assigns an integer value of 0 to the variable 'element' with a condition to check whether the 'element' is less than the value stored inside the 'studentsize' pointer. This will then proceed to print out to the terminal the following commands and hence, continues the iterations 'element++'*/
 		printf("%-11.10s", count[element].name);	/*Prints out to the terminal the first 10 characters of the student's name with a left indentation of 11 spaces*/
 		printf("%02d-%02d-%-5.4d", count[element].birthday.day, count[element].birthday.month, count[element].birthday.year);	/*Prints out to the terminal the formatted birthday dates of the student in the form of '00-00-0000'*/
-		printf("%.4f\n", count[element].gpa);	/*Prints out to the terminal the gpa of the student in float type withe four 0's padded after the decimal place*/
+		printf("%.4f\n", count[element].gpa);	/*Prints out to the terminal the gpa of the student with four 0's padded after the decimal place*/
 	}
 }
 
@@ -234,12 +234,12 @@ Save the student list to the database
 ***************************************************************************/
 void savestudentlist(studentcount count[], int* studentsize) {
 	int record;		/*The keyword int declares 'record' to be an integer*/
-	FILE *writefile;
-	writefile = fopen(DB_FILE_NAME, "w");
-	for (record = 0; record < *studentsize; record++) {
-		fprintf(writefile, "%11s ", count[record].name);	
-		fprintf(writefile, "%02d-%02d-%d ", count[record].birthday.day, count[record].birthday.month, count[record].birthday.year);
-		fprintf(writefile, "%f\n", count[record].gpa);
+	FILE *writefile;	/*Declares the file pointer to 'writefile'*/
+	writefile = fopen(DB_FILE_NAME, "w");	/*Opens the file 'DB_FILE_NAME' in read mode*/
+	for (record = 0; record < *studentsize; record++) {		/*Assigns an integer value of 0 to the variable 'record' with a condition to check whether the 'record' is less than the value stored inside the 'studentsize' pointer. This will then proceed to read formatted input from a stream that was displayed previously in the terminal and hence, continues the iterations 'element++'*/
+		fprintf(writefile, "%11s ", count[record].name);	/*Sends formatted output to a stream where the number of bytes for character name is saved to a file*/
+		fprintf(writefile, "%02d-%02d-%d ", count[record].birthday.day, count[record].birthday.month, count[record].birthday.year);		/**/
+		fprintf(writefile, "%f\n", count[record].gpa);	/**/
 	}
 	fclose(writefile);
 }
