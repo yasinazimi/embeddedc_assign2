@@ -1,0 +1,1 @@
+This assignment solely uses C to design an interactive program that can manage the list of students in a class.
