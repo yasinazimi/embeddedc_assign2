@@ -3,13 +3,6 @@
 Name: Yasin Azimi
 Student ID: 11733490
 Date of submission: 22/05/2016
-A brief statement on what you could achieve (less than 50 words):
-= My work is of high standards and I believe this program meets 95% of the requirements. It uses suitable struct, pointer and variable names with no declaration of global variables. Hence, it passes all the declared variables and pointers through the use of pointers in each method. Each method performs its own specific task which makes the program low coupling and high cohesive. The program meets all of the inexperienced user requirements and the majority of the hostile user requirements. Therefore, it does not generate any error message during compilation. I am hoping to achieve a High Distinction in the range of 22-25.
-
-A brief statement on what you could NOT achieve (less than 50 words):
-= One requirement of the hostile user which I was unable to achieve is when the user inputs a char with int for their gpa. 
-
-
 ***************************************************************************/
 
 /**************************************************************************
