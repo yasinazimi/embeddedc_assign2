@@ -68,21 +68,24 @@ int main(void) {
 			case '1':
 					if (studentsize < MAX_CLASS_SIZE) {		/*Checks if the number of students in the class is less than 5. If they are, than add the student to the list in 'studentsize' stored as an array of struct type 'student'*/
 						addstudent(studentlist, &studentsize);
-					} else {	/*If the number of students in the class is greater than or equal to 5, prints out error message*/
+					}
+					else {	/*If the number of students in the class is greater than or equal to 5, prints out error message*/
 						printf("Class is full\n"); }
 					break;
 					
 			case '2':
 					if (studentsize > 0) {		/*Checks if the number of students in the class is greater than 0. If they are, than delete the most recent student added to the list in 'studentsize' stored as an array of struct type 'student'*/
 						deletestudent(studentlist, &studentsize);
-					} else {	/*If there are no students in the list, prints out error message*/
+					}
+					else {	/*If there are no students in the list, prints out error message*/
 						printf("Class is empty\n"); }
 					break;
 					
 			case '3':
 					if (studentsize <= 0) {		/*Checks if there are no students in the list. If there is none, prints out error message*/
 						printf("Class is empty\n");
-					} else {	/*If there are students in the list, display the students in the terminal that are in the list in 'studentsize' stored as an array of struct type 'student'*/
+					}
+					else {	/*If there are students in the list, display the students in the terminal that are in the list in 'studentsize' stored as an array of struct type 'student'*/
 						showstudentlist(studentlist, &studentsize); }
 					break;
 
@@ -93,7 +96,8 @@ int main(void) {
 			case '5':
 					if (studentsize <= 0) {		/*Checks if there are no students in the list 'studentsize' (an instance where no backup copy of student list is made to a database file). If there are none prints out error message*/
 						printf("Read error\n");
-					} else {	/*If there is an instance of a database and a backup copy of students list exists in that database file, than read all the students that are in the database file in 'studentsize' stored as an array of struct type 'student'*/
+					}
+					else {	/*If there is an instance of a database and a backup copy of students list exists in that database file, than read all the students that are in the database file in 'studentsize' stored as an array of struct type 'student'*/
 						readstudentlist(studentlist, &studentsize); }
 					break;
 					
